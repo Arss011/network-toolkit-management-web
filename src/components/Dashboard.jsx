@@ -1,6 +1,8 @@
 import { useState } from 'react'
 import UserManagement from './UserManagement'
 import CategoryManagement from './CategoryManagement'
+import ToolkitManagement from './ToolkitManagement'
+
 
 function Dashboard({ user, onLogout }) {
   const [activeTab, setActiveTab] = useState('loans')
@@ -128,6 +130,7 @@ function Dashboard({ user, onLogout }) {
 
           <div className="mt-4 sm:mt-6">
             {activeTab === 'categories' && user.role === 'admin' && <CategoryManagement />}
+            {activeTab === 'toolkits' && user.role === 'admin' && <ToolkitManagement />}
             {activeTab === 'users' && user.role === 'admin' && <UserManagement />}
           </div>
         </div>
