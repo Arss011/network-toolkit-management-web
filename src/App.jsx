@@ -1,34 +1,56 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState, useEffect } from 'react'
+import AuthPage from './components/AuthPage'
+import { authService } from './services/authService'
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [user, setUser] = useState(null)
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    checkAuth()
+  }, [])
+
+  const checkAuth = async () => {
+    try {
+      const token = localStorage.getItem('token')
+      if (token) {
+        const userData = await authService.getCurrentUser()
+        setUser(userData)
+      }
+    } catch (error) {
+      console.error('Auth check failed:', error)
+      localStorage.removeItem('token')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handleLogin = (userData, token) => {
+    setUser(userData)
+    localStorage.setItem('token', token)
+  }
+
+  const handleLogout = () => {
+    setUser(null)
+    localStorage.removeItem('token')
+  }
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-100 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-500"></div>
+      </div>
+    )
+  }
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    <div className="min-h-screen bg-gray-100">
+      {user ? (
+        <Dashboard user={user} onLogout={handleLogout} />
+      ) : (
+        <AuthPage onLogin={handleLogin} />
+      )}
+    </div>
   )
 }
 
