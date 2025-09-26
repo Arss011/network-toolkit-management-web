@@ -135,6 +135,24 @@ class ToolkitService {
     return { success: true }
   }
 
+  async getToolkitById(id) {
+    const token = localStorage.getItem('token')
+    const response = await fetch(`${API_BASE_URL}/toolkits/${id}`, {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    })
+
+    if (!response.ok) {
+      const error = await response.json()
+      throw new Error(error.message || `Failed to fetch toolkit (${response.status})`)
+    }
+
+    const data = await response.json()
+    return data
+  }
+
   async updateToolkitStock(id, stockData) {
     const token = localStorage.getItem('token')
     const response = await fetch(`${API_BASE_URL}/toolkits/${id}/stock`, {

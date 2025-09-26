@@ -2,6 +2,8 @@ import { useState } from 'react'
 import UserManagement from './UserManagement'
 import CategoryManagement from './CategoryManagement'
 import ToolkitManagement from './ToolkitManagement'
+import LoanMonitoring from './LoanMonitoring'
+import AdminLoanManagement from './AdminLoanManagement'
 
 
 function Dashboard({ user, onLogout }) {
@@ -129,6 +131,8 @@ function Dashboard({ user, onLogout }) {
           </div>
 
           <div className="mt-4 sm:mt-6">
+            {activeTab === 'loans' && <LoanMonitoring />}
+            {activeTab === 'admin-loans' && user.role === 'admin' && <AdminLoanManagement />}
             {activeTab === 'categories' && user.role === 'admin' && <CategoryManagement />}
             {activeTab === 'toolkits' && user.role === 'admin' && <ToolkitManagement />}
             {activeTab === 'users' && user.role === 'admin' && <UserManagement />}
