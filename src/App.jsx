@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import AuthPage from './components/AuthPage'
+import Dashboard from './components/Dashboard'
 import { authService } from './services/authService'
 
 function App() {
@@ -45,7 +46,11 @@ function App() {
 
   return (
     <div className="min-h-screen bg-gray-100">
-      <AuthPage onLogin={handleLogin} />
+      {user ? (
+        <Dashboard user={user} onLogout={handleLogout} />
+      ) : (
+        <AuthPage onLogin={handleLogin} />
+      )}
     </div>
   )
 }
