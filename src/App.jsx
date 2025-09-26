@@ -45,11 +45,7 @@ function App() {
 
   return (
     <div className="min-h-screen bg-gray-100">
-      {user ? (
-        <Dashboard user={user} onLogout={handleLogout} />
-      ) : (
-        <AuthPage onLogin={handleLogin} />
-      )}
+      <AuthPage onLogin={handleLogin} />
     </div>
   )
 }

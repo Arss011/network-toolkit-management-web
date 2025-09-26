@@ -29,8 +29,6 @@ function AuthPage({ onLogin }) {
         setError('Login failed')
       }
     } catch (err) {
-      console.log(err);
-      
       setError('Invalid username or password')
     } finally {
       setLoading(false)
