@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import UserManagement from './UserManagement'
+import CategoryManagement from './CategoryManagement'
 
 function Dashboard({ user, onLogout }) {
   const [activeTab, setActiveTab] = useState('loans')
@@ -126,6 +127,7 @@ function Dashboard({ user, onLogout }) {
           </div>
 
           <div className="mt-4 sm:mt-6">
+            {activeTab === 'categories' && user.role === 'admin' && <CategoryManagement />}
             {activeTab === 'users' && user.role === 'admin' && <UserManagement />}
           </div>
         </div>
