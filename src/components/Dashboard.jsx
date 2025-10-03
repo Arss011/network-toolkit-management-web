@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import UserManagement from './UserManagement'
 import CategoryManagement from './CategoryManagement'
 import ToolkitManagement from './ToolkitManagement'
@@ -9,6 +9,39 @@ import AdminLoanManagement from './AdminLoanManagement'
 function Dashboard({ user, onLogout }) {
   const [activeTab, setActiveTab] = useState('loans')
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+
+  // Load active tab from URL on mount
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search)
+    const tab = urlParams.get('tab')
+    if (tab && isValidTab(tab)) {
+      setActiveTab(tab)
+    }
+  }, [])
+
+  // Update URL when active tab changes
+  useEffect(() => {
+    const url = new URL(window.location)
+    if (activeTab === 'loans') {
+      // Default tab, remove tab parameter
+      url.searchParams.delete('tab')
+    } else {
+      url.searchParams.set('tab', activeTab)
+    }
+    window.history.replaceState(null, '', url)
+  }, [activeTab])
+
+  // Function to validate tab
+  const isValidTab = (tab) => {
+    const validTabs = ['loans', 'admin-loans', 'categories', 'toolkits', 'users']
+    return validTabs.includes(tab)
+  }
+
+  // Function to handle tab change
+  const handleTabChange = (tab) => {
+    setActiveTab(tab)
+    setMobileMenuOpen(false) // Close mobile menu on tab change
+  }
 
   return (
     <div className="min-h-screen bg-gray-100">
@@ -64,7 +97,7 @@ function Dashboard({ user, onLogout }) {
             <nav className="-mb-px overflow-x-auto">
               <div className="flex space-x-2 sm:space-x-8 min-w-max">
                 <button
-                  onClick={() => setActiveTab('loans')}
+                  onClick={() => handleTabChange('loans')}
                   className={`py-2 px-2 sm:px-1 border-b-2 font-medium text-xs sm:text-sm whitespace-nowrap ${
                     activeTab === 'loans'
                       ? 'border-blue-500 text-blue-600'
@@ -78,7 +111,7 @@ function Dashboard({ user, onLogout }) {
                 {user.role === 'admin' && (
                   <>
                     <button
-                      onClick={() => setActiveTab('admin-loans')}
+                      onClick={() => handleTabChange('admin-loans')}
                       className={`py-2 px-2 sm:px-1 border-b-2 font-medium text-xs sm:text-sm whitespace-nowrap ${
                         activeTab === 'admin-loans'
                           ? 'border-blue-500 text-blue-600'
@@ -90,7 +123,7 @@ function Dashboard({ user, onLogout }) {
                     </button>
 
                     <button
-                      onClick={() => setActiveTab('categories')}
+                      onClick={() => handleTabChange('categories')}
                       className={`py-2 px-2 sm:px-1 border-b-2 font-medium text-xs sm:text-sm whitespace-nowrap ${
                         activeTab === 'categories'
                           ? 'border-blue-500 text-blue-600'
@@ -102,7 +135,7 @@ function Dashboard({ user, onLogout }) {
                     </button>
 
                     <button
-                      onClick={() => setActiveTab('toolkits')}
+                      onClick={() => handleTabChange('toolkits')}
                       className={`py-2 px-2 sm:px-1 border-b-2 font-medium text-xs sm:text-sm whitespace-nowrap ${
                         activeTab === 'toolkits'
                           ? 'border-blue-500 text-blue-600'
@@ -114,7 +147,7 @@ function Dashboard({ user, onLogout }) {
                     </button>
 
                     <button
-                      onClick={() => setActiveTab('users')}
+                      onClick={() => handleTabChange('users')}
                       className={`py-2 px-2 sm:px-1 border-b-2 font-medium text-xs sm:text-sm whitespace-nowrap ${
                         activeTab === 'users'
                           ? 'border-blue-500 text-blue-600'
